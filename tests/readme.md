@@ -1,0 +1,1 @@
+to run: python -m pytest tests/ -v -s
