@@ -22,7 +22,6 @@ class Note(SQLModel, table=True):
     __tablename__ = "notes"
 
     id: int | None = Field(default=None, primary_key=True)
-    title: str
     content: str
     is_pinned: bool = Field(default=False)
     is_completed: bool = Field(default=False)

@@ -6,7 +6,6 @@ from app.schemas import (
     NoteCreate,
     NoteResponse,
     NoteUpdate,
-    NoteDeleteResponse,
     NoteListResponse,
 )
 from app.models import Note, User, utc_now
@@ -73,7 +72,8 @@ async def update_note(
     return note
 
 
-@router.delete("/{note_id}", response_model=NoteDeleteResponse)
+# DELETE note BY ID
+@router.delete("/{note_id}")
 async def delete_note(
     note_id: int,
     current_user: User = Depends(get_current_user),
@@ -84,12 +84,8 @@ async def delete_note(
     if note is None or note.owner_id != current_user.id:
         raise HTTPException(status_code=404, detail="Note not found")
 
-    response = NoteDeleteResponse(**note.model_dump())
-
     session.delete(note)
     session.commit()
-
-    return response
 
 
 @router.get("/", response_model=NoteListResponse)

@@ -3,14 +3,12 @@ from datetime import datetime
 
 
 class NoteCreate(BaseModel):
-    title: str = Field(..., min_length=1, max_length=200)
     content: str = Field(..., min_length=1)
     is_pinned: bool = Field(False)
     is_completed: bool = Field(False)
 
 
 class NoteUpdate(BaseModel):
-    title: str | None = Field(None, min_length=1, max_length=200)
     content: str | None = Field(None, min_length=1)
     is_pinned: bool | None = Field(None)
     is_completed: bool | None = Field(None)
@@ -18,7 +16,7 @@ class NoteUpdate(BaseModel):
 
 class NoteResponse(BaseModel):
     id: int
-    title: str
+    # title: str
     content: str
     is_pinned: bool
     is_completed: bool
@@ -34,17 +32,6 @@ class NoteListResponse(BaseModel):
     total: int
     limit: int
     offset: int
-
-
-class NoteDeleteResponse(BaseModel):
-    id: int
-    title: str
-    content: str
-    is_pinned: bool
-    is_completed: bool
-    message: str = "Deleted successfully"
-
-    model_config = {"from_attributes": True}
 
 
 # ----- USER
