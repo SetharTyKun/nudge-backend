@@ -97,7 +97,7 @@ async def google_login(
         session.refresh(user)
 
     token = create_access_token(user.id)
-    return Token(access_token=token)
+    return Token(access_token=token, token_type="bearer")
 
 
 @router.get("/me", response_model=UserResponse)

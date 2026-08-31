@@ -41,7 +41,7 @@ def verify_password(plain_password: str, hashed_password: str) -> str:
 
 
 def verify_google_token(token: str) -> dict:
-    idinfo = google_id_token.verify_oauth2_token(
+    id_info = google_id_token.verify_oauth2_token(
         token, google_requests.Request(), GOOGLE_CLIENT_ID
     )
-    return idinfo
+    return id_info
