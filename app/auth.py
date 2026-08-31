@@ -2,10 +2,14 @@ import bcrypt, os
 from jose import JWTError, jwt
 from datetime import datetime, timedelta, timezone
 from dotenv import load_dotenv
+from google.oauth2 import id_token as google_id_token
+from google.auth.transport import requests as google_requests
+
 
 load_dotenv()
 
 SECRET_KEY = os.getenv("SECRET_KEY")
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 
 if not SECRET_KEY:
     raise RuntimeError("SECRET_KEY environment variable is not set")
@@ -34,3 +38,10 @@ def hash_password(plain_password: str) -> str:
 
 def verify_password(plain_password: str, hashed_password: str) -> str:
     return bcrypt.checkpw(plain_password.encode(), hashed_password.encode())
+
+
+def verify_google_token(token: str) -> dict:
+    idinfo = google_id_token.verify_oauth2_token(
+        token, google_requests.Request(), GOOGLE_CLIENT_ID
+    )
+    return idinfo

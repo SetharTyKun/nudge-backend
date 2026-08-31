@@ -4,9 +4,13 @@ from sqlmodel import Session, select
 from app.models import User
 from app.database import get_session
 from app.schemas import UserCreate, UserResponse, Token, GoogleLoginRequest
-from app.auth import hash_password, verify_password, create_access_token
+from app.auth import (
+    hash_password,
+    verify_password,
+    create_access_token,
+    verify_google_token,
+)
 from app.dependencies import get_current_user
-from app.auth import verify_google_token
 import secrets
 
 router = APIRouter()
