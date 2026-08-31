@@ -76,7 +76,7 @@ async def google_login(
     request: GoogleLoginRequest, session: Session = Depends(get_session)
 ):
     try:
-        id_info = verify_google_token(request)
+        id_info = verify_google_token(request.id_token)
     except ValueError:
         raise HTTPException(status_code=401, detail="Invalid Google Token")
 
