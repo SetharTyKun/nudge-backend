@@ -3,10 +3,11 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlmodel import Session, select
 from app.models import User
 from app.database import get_session
-from app.schemas import UserCreate, UserResponse, Token
+from app.schemas import UserCreate, UserResponse, Token, GoogleLoginRequest
 from app.auth import hash_password, verify_password, create_access_token
 from app.dependencies import get_current_user
-
+from app.auth import verify_google_token
+import secrets
 
 router = APIRouter()
 
@@ -63,6 +64,35 @@ async def login(
 
     token = create_access_token(user_id=user.id)
 
+    return Token(access_token=token)
+
+
+@router.post("/google-login", response_model=Token)
+async def google_login(
+    request: GoogleLoginRequest, session: Session = Depends(get_session)
+):
+    try:
+        id_info = verify_google_token(request)
+    except ValueError:
+        raise HTTPException(status_code=401, detail="Invalid Google Token")
+
+    email = id_info.get("email")
+    if not email:
+        raise HTTPException(status_code=401, detail="Google account has no email")
+
+    user = session.exec(select(User).where(User.email == email))
+
+    if not user:
+        user = User(
+            username=email.split("@")[0],
+            email=email,
+            hashed_password=hash_password(secrets.token_urlsafe(32)),
+        )
+        session.add(user)
+        session.commit()
+        session.refresh(user)
+
+    token = create_access_token(user.id)
     return Token(access_token=token)
 
 
