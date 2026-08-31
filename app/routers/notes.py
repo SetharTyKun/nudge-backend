@@ -57,7 +57,7 @@ async def update_note(
     if note is None or note.owner_id != current_user.id:
         raise HTTPException(status_code=404, detail="Note not found")
 
-    # exclude_unset=True means if note_in = {"title": None, "content": None, "is_pinnned": True}, then changes = {"is_pinned": True}
+    # exclude_unset=True means if note_in = {"content": None, "is_pinnned": True}, then changes = {"is_pinned": True}
     changes = note_in.model_dump(exclude_unset=True)
 
     for key, value in changes.items():
