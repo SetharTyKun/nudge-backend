@@ -84,7 +84,7 @@ async def google_login(
     if not email:
         raise HTTPException(status_code=401, detail="Google account has no email")
 
-    user = session.exec(select(User).where(User.email == email))
+    user = session.exec(select(User).where(User.email == email)).first()
 
     if not user:
         user = User(
